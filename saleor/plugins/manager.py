@@ -17,6 +17,7 @@ if TYPE_CHECKING:
     # flake8: noqa
     from django.db.models.query import QuerySet
     from .base_plugin import BasePlugin, PluginConfigurationType
+    from ..checkout import CheckoutLineInfo
     from ..checkout.models import Checkout, CheckoutLine
     from ..product.models import Collection, Product, ProductType, ProductVariant
     from ..account.models import Address, User
@@ -100,7 +101,7 @@ class PluginsManager(PaymentInterface):
     def calculate_checkout_total(
         self,
         checkout: "Checkout",
-        lines: Iterable,  # FIXME: add type
+        lines: Iterable["CheckoutLineInfo"],
         address: Optional["Address"],
         discounts: Iterable[DiscountInfo],
     ) -> TaxedMoney:
@@ -125,7 +126,7 @@ class PluginsManager(PaymentInterface):
     def calculate_checkout_subtotal(
         self,
         checkout: "Checkout",
-        lines: Iterable,
+        lines: Iterable["CheckoutLineInfo"],
         address: Optional["Address"],
         discounts: Iterable[DiscountInfo],
     ) -> TaxedMoney:
@@ -153,7 +154,10 @@ class PluginsManager(PaymentInterface):
         )
 
     def calculate_checkout_shipping(
-        self, checkout: "Checkout", lines: Iterable, discounts: Iterable[DiscountInfo],
+        self,
+        checkout: "Checkout",
+        lines: Iterable["CheckoutLineInfo"],
+        discounts: Iterable[DiscountInfo],
     ) -> TaxedMoney:
         default_value = base_calculations.base_checkout_shipping_price(checkout, lines)
         return self.__run_method_on_plugins(

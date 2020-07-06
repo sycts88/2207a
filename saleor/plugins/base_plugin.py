@@ -10,6 +10,7 @@ from .models import PluginConfiguration
 if TYPE_CHECKING:
     # flake8: noqa
     from ..core.taxes import TaxType
+    from ..checkout import CheckoutLineInfo
     from ..checkout.models import Checkout, CheckoutLine
     from ..discount import DiscountInfo
     from ..product.models import Collection, Product, ProductType, ProductVariant
@@ -69,7 +70,7 @@ class BasePlugin:
     def calculate_checkout_total(
         self,
         checkout: "Checkout",
-        lines: List["CheckoutLine"],
+        lines: List["CheckoutLineInfo"],
         address: Optional["Address"],
         discounts: List["DiscountInfo"],
         previous_value: TaxedMoney,
@@ -84,7 +85,7 @@ class BasePlugin:
     def calculate_checkout_subtotal(
         self,
         checkout: "Checkout",
-        lines: List["CheckoutLine"],
+        lines: List["CheckoutLineInfo"],
         address: Optional["Address"],
         discounts: List["DiscountInfo"],
         previous_value: TaxedMoney,
@@ -99,7 +100,7 @@ class BasePlugin:
     def calculate_checkout_shipping(
         self,
         checkout: "Checkout",
-        lines: List["CheckoutLine"],
+        lines: List["CheckoutLineInfo"],
         discounts: List["DiscountInfo"],
         previous_value: TaxedMoney,
     ) -> TaxedMoney:
