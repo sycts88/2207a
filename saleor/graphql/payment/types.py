@@ -109,7 +109,6 @@ class Payment(CountableDjangoObjectType):
             "order",
             "billing_email",
             "customer_ip_address",
-            "extra_data",
         ]
 
     @staticmethod
